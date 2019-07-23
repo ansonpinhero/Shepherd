@@ -1,7 +1,10 @@
 {% load static %}
 <header class="app-header navbar">
-    <button class="navbar-toggler mobile-sidebar-toggler d-lg-none mr-auto" type="button">
-    <span class="navbar-toggler-icon"></span>
+        {% if user.is_authenticated %}  
+        <button class="navbar-toggler mobile-sidebar-toggler d-lg-none mr-auto" type="button">
+                <span class="navbar-toggler-icon"></span>
+        {% endif %}  
+   
 </button>
         <a class="navbar-brand" href="#">
             <img class="navbar-brand-full" src="{% static 'img/logo.png' %}" width="100" height="45" alt="Shepherd">
@@ -12,14 +15,7 @@
     </button>
     {% endif %}
 
-    <ul class="nav navbar-nav d-md-down-none">
-        <li class="nav-item px-3">
-            <a class="nav-link" href="#"></a>
-        </li>
-        <li class="nav-item px-3">
     
-    </li>
-    </ul>
     <ul class="nav navbar-nav ml-auto">
         
         {% if user.is_authenticated %}

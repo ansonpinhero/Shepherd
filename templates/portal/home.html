@@ -3,10 +3,39 @@
 
 {% block content %}
 
+<style>
 
+
+</style>
 {% if user.is_authenticated %}
+{% if user.user_type == "l4" %}
+    <marquee> <a href="{% url 'volunteer_invite' %}" >Click  here  to apply for becoming a volunteer</a></marquee> 
+        {% endif %}
                 {% else %}
-                    <p>Please <a href="/accounts/login">Login </a> to continue</p>
+</br>
+                <div id="myCarousel" class="carousel slide" data-ride="carousel">
+                        
+                        <div class="carousel-inner">
+                          <div class="carousel-item active">
+                            <img class="first-slide" src="https://images.edexlive.com/uploads/user/imagelibrary/2018/8/22/original/Kerala_flood_rescue.JPG" alt="First slide" width="100%" height ="490 px" >
+                            <div class="container">
+                              <div class="carousel-caption text-left">
+                                <h1>Shepherd</h1>
+                                <p>Data management portal with ground and rescue data analysis during emergency situations.</p>
+                                <p><a class="btn btn-lg btn-primary" href="{% url 'login' %}" role="button">Get Started</a></p>
+                              </div>
+                            </div>
+                          </div>
+                          
+                          </div>
+                        </div>
+                        
+                      </div>
+                
+                    </div>
+
+
+
                 {% endif %}
 
 

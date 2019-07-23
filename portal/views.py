@@ -187,13 +187,13 @@ def update_request(request,request_id):
 @login_required(login_url='login')
 def volunteer_invite(request):
     usr=volunteer_invitations.objects.select_related().filter(uid=request.user)
-    if request.method=="POST":
-        if(len(usr)==0):
-            inv= volunteer_invitations()
-            inv.uid=request.user
-            inv.save()
-            messages.success(request, 'You have submitted the request for becoming a volunteer')
-        else:
-            messages.success(request, 'Already Submitted a request ' )
-        return render(request,'portal/blank.html')
-    return render (request,'portal/vol_inv.html')
+  
+    if(len(usr)==0):
+        inv= volunteer_invitations()
+        inv.uid=request.user
+        inv.save()
+        messages.success(request, 'You have submitted the request for becoming a volunteer')
+    else:
+        messages.success(request, 'Already Submitted a request ' )
+    return render(request,'portal/blank.html')
+   

@@ -78,5 +78,7 @@ class volunteer_invitations(models.Model):
         null=False,blank=False,
         default='s4'
     )
-    
+    def __str__(self):
+        full_name = str(self.uid)
+        return full_name
     
