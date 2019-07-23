@@ -25,6 +25,12 @@ status_codes = {
 def index(request):
     
     return render(request, 'portal/home.html')
+
+def view_404(request,exception=None):
+    return render(request, 'portal/404.html')
+def view_500(request,exception=None):
+    return render(request, 'portal/500.html')
+
 @login_required(login_url = 'login')    
 def logout(request):
     log_out(request)

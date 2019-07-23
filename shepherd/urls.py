@@ -21,3 +21,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('',include('portal.urls')),
 ]
+handler404 = 'portal.views.view_404'
+handler500 = 'portal.views.view_500'

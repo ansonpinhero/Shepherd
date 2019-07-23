@@ -37,3 +37,4 @@ urlpatterns = [
      
     
 ]
+handler404 = 'portal.views.view_404'
