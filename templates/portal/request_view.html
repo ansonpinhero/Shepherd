@@ -1,0 +1,83 @@
+{% extends 'portal/base/base.html' %}
+{% load bootstrap3 %}
+{% load static %}
+
+{% block breadcrumb %}
+
+<li class="breadcrumb-item active" aria-current="page">Requests / View</li>
+{% endblock %}
+
+{% block content %}
+{% if messages %}
+{% for message in messages %}
+<div class="alert alert-info" role="alert">
+    {{ message }}
+</div>
+  
+{% endfor %}
+  
+{% endif %}
+<div class = "card">
+    <div class="card-header">
+        <i class="fa fa-align-justify"></i>Submitted Requests by {{user}} </br>
+    </div>
+      <div class ="card-body">
+        
+        <div class="table-responsive">
+            <table class="table">
+                <thead class="thead-dark">
+              <tr>
+                
+                <th>Name </th>                              
+                <th>Location</th>
+                <th>Date & Time</th>
+                <th>Status</th>
+                <th colspan ="3"><center>Actions</center></th>
+                
+              </thead> 
+              </tr>
+              {% for req in data %}
+            
+                  <tr>
+                    
+                    <td>{{ req.first_name }} {{ req.last_name }}  </td>
+                    
+                    <td>{{ req.loc_latlong }}</td>
+                    <td>{{ req.timestamp}}</td>
+                    <td>{{ req.status }}</td>
+                   
+                    <td colspan="3"><center>
+                        <form method ="POST">{% csrf_token %}  
+                          
+                        <a class="btn btn-primary " href="{% url 'request_view_byid' request_id=req.id %}">View</a>                       
+                            <input type="hidden" name="request_id" value="{{req.id}}">
+                        
+                        <a class="btn btn-secondary " href="{% url 'request_update_byid' req.id  %}">Update</a>
+                        
+                       <input  class="btn btn-danger " type ="submit" formaction="{% url 'request_delete_byid'  %}" value ="Delete" >
+                      </form>
+                      </center>
+                    </td>
+                     
+                    
+                    
+                  </tr>
+                  
+              {% endfor %}
+            </table>
+
+            
+
+          </div>
+        
+      </div>
+</div>
+
+
+
+
+{% endblock %}
+
+
+
+

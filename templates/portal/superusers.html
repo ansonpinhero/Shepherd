@@ -1,0 +1,49 @@
+{% extends 'portal/base/base.html' %}
+
+{% load static %}
+
+
+
+
+{% block breadcrumb %}
+<li class="breadcrumb-item " aria-current="page">Users</li>
+<li class="breadcrumb-item " aria-current="page">Super Users</li>
+<li class="breadcrumb-item active" aria-current="page">View</li>
+{% endblock %}
+
+{% block content %}
+<div class="card-header">
+                    <i class="fa fa-align-justify"></i> Super Users</div>
+                  <div class="card-body">
+                    <table class="table table-responsive-sm table-sm">
+                      <thead>
+                        <tr>
+                          <th>User</th>
+                          <th>Added By</th>
+                          <th>Added On</th>
+                          
+                          <th></th>
+                          
+                          
+                          
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {% for x in user_name  %}
+                        <tr>
+                          <td>{{x.user }}</td>
+                           <td>{{x.addedby }}</td>
+                           <td>{{x.last }}</td>
+                           
+                           <td><a class="btn btn btn-outline-secondary" href="#">More Actions </a></td>
+                           
+                         
+                        </tr>
+                          
+                        {% endfor %}
+                        
+                      </tbody>
+                    </table>
+                   
+                  </div>
+{% endblock %}

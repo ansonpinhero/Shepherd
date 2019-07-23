@@ -1,0 +1,63 @@
+
+<!DOCTYPE html>
+<html lang="en">
+    
+<!--Headers-->
+{% include 'portal/base/header.html' %}
+
+    {% if user.is_authenticated %}
+     <body class="app header-fixed sidebar-fixed aside-menu-fixed aside-menu-hidden">       
+    {% else %}
+     <body class="app header-fixed sidebar-hidden aside-menu-fixed aside-menu-hidden">
+    {% endif %}
+
+<!--Navbar-->
+{% include 'portal/base/navbar.html' %}
+
+<div class="app-body">
+    
+    
+    {% if user.is_authenticated %}
+            <!--Sidebar-->
+        {% include 'portal/base/sidebar.html' %}
+    {% else %}
+    {% endif %}
+
+    <!-- Main content -->
+    <main class="main">
+
+        <!-- Breadcrumb -->
+        
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">Home</li>
+            {% block breadcrumb %}
+            {% endblock %}
+        {% include 'portal/base/breadcrumb.html' %}
+        
+
+        <!-- Page contents -->
+        <div class="container-fluid">
+            <div class="animated fadeIn">
+                {% block content %}
+                
+                {% endblock %}
+            </div>
+
+        </div>
+        <!-- /.conainer-fluid -->
+    </main>
+
+
+    <!--Aside bar-->
+    
+
+</div>
+
+<!--Footer-->
+{% include 'portal/base/footer.html' %}
+
+<!--JS-->
+{% include 'portal/base/js.html' %}
+
+</body>
+</html>

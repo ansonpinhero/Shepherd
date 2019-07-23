@@ -1,0 +1,269 @@
+{% extends 'portal/base/base.html' %}
+{% load static %}
+{% load bootstrap3 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+
+{% block breadcrumb %}
+    <li class="breadcrumb-item active" aria-current="page">Update Request </li>
+{% endblock %}
+
+{% block content %}
+
+<style type="text/css">
+  #place_modal_map {
+   height: 100%;
+   margin: 0;
+ }
+ #place_modal_map .centerMarker{
+   position:absolute;
+   /*url of the marker*/
+   background:url(http://maps.gstatic.com/mapfiles/markers2/marker.png) no-repeat;
+   /*center the marker*/
+   top:50%;left:50%;
+   z-index:1;
+   /*fix offset when needed*/
+   margin-left:-10px;
+   margin-top:-34px;
+   /*size of the image*/
+   height:34px;
+   width:20px;
+   cursor:pointer;
+ }
+ #place_modal_map{
+     height: 45vh;
+ }
+ .pac-container{
+   z-index: 10000 !important;
+ }
+ 
+
+
+</style>
+
+<div class = "card">
+  <div class="card-header">
+    <i class="fa fa-align-justify"></i> Update Request by {{req_data}} </br>
+  </div>
+  <div class ="card-body">
+    <button id = "btn-findmylocation" class="btn btn-primary" data-toggle="modal" data-target="#place_picker_modal">Update location</button><br/>
+    
+    <form method="POST"  autocomplete="off" >{% csrf_token %}  
+        {%bootstrap_form form layout='placeholder'%}
+      <button type="submit" class="btn btn-primary" id="id_submit_button">Update</button>
+      
+    </form>
+  </div>
+
+
+
+
+</div>
+
+  <div id="place_picker_modal" class="modal  fade" role="dialog"  >
+    <div class="modal-dialog" style="background: white">
+      <div class="modal-content">
+          <div class="modal-header">
+              <h4 id="place_picker_modal_label" class="modal-title"> Select Location </h4>
+              <button type="button" class="close" data-dismiss="modal">X</button>
+              
+
+          </div>
+          <div class="modal-body" id="placePickerBody">
+              <label>Search your location</label>
+              <input name="auto-complete-location" type="text" class="textbox controls form-control" placeholder="Example: Thrissur" title="" id="inp_location_search">
+              <label> or enter comma seperated GPS coordinates: </label>
+              <div class="input-group">
+              <input type="text" class="form-control" id="manual_coordinates" placeholder="Example: 10.5276,76.2144">
+                <span class="input-group-btn">
+                  <button id="load_coordinates_button" class="btn btn-primary">Load</button>
+                </span>
+              </div>
+    
+              <br><br>
+              <div id="place_modal_map" ></div>
+            </div>
+            <div class="modal-footer">
+              <button class="btn btn-success" data-dismiss="modal" id="modal_ok_button" >Done</button>
+            </div>
+          </div>
+        
+      </div>
+     
+  </div>
+  
+
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script type="text/javascript">
+    $(document).ready(function(){
+      
+      document.getElementById('id_loc_latlong').readOnly= true;
+      document.getElementById('id_loc_latlong_accurate').readOnly= true;
+      $(document.getElementById('id_loc_latlong_accurate')).parent().hide();
+      
+      var reset_btn = $('#id_submit_button'); 
+      var submit_btn = $('#id_reset_button');  
+      submit_btn.on('click', function()
+      {
+        reset_btn.click();
+      });
+
+    });
+      
+    
+      
+
+    window.onload = function()
+    {
+      document.getElementById("btn-findmylocation").addEventListener("click", function()
+      {
+        initializeModalMap(10.5276, 76.2144, 7);
+        loadPlacePicker();
+     
+  
+    
+      var gpsField = document.getElementById('id_loc_latlong');
+      var gpsAccuracyField = document.getElementById('id_loc_latlong_accurate');
+      // GPS Field is not editable via text.
+      gpsField.readOnly = true;
+      gpsAccuracyField.readOnly = true;
+      // Collect accuracy, but don't display it to user.
+      $(gpsAccuracyField).parent().hide();
+      $(gpsField).click(showLocationPopup);
+      var options = { enableHighAccuracy: true };
+      var success = function(pos) 
+      {
+        var crd = pos.coords;
+        gpsField.value = crd.latitude + ',' + crd.longitude;
+        gpsAccuracyField.value = crd.accuracy + ' Meters';
+        refreshMap(crd.latitude, crd.longitude, 14);
+        displayAddress(crd.latitude, crd.longitude);
+      }
+      var error = function(err) 
+      {
+        console.warn(`ERROR(${err.code}): ${err.message}`);
+        showLocationPopup();
+      }
+    
+      navigator.geolocation.getCurrentPosition(success, error, options);
+    
+    
+      $('#load_coordinates_button').click(loadManualGps);
+      $('#manual_coordinates').keypress(function (e)
+      {
+        if (e.which === 13) 
+        {
+          loadManualGps();
+        }
+      });
+    
+    
+      $('#place_picker_modal').on('hidden.bs.modal', function (e) 
+      {
+        var latLng = $('#id_loc_latlong').val().split(',');
+        $('#id_loc_latlong_accurate').val('5 Meters');
+        displayAddress(latLng[0].trim(), latLng[1].trim());
+      });
+
+
+      });
+    }
+
+  $('#location-manually').on('click', function(event){
+    event.preventDefault();
+  });
+  
+
+  var showLocationPopup = function(coords) {
+    $('#place_picker_modal').modal('show');
+  }
+  function initializeModalMap(lat, lng, zoom) {
+    var mapOptions = {
+      zoom: zoom || 14,
+      center: new google.maps.LatLng(lat, lng),
+      mapTypeId: google.maps.MapTypeId.ROADMAP,
+      fullscreenControl: false,
+      gestureHandling: 'greedy'
+    };
+    modalMap = new google.maps.Map(document.getElementById('place_modal_map'),
+      mapOptions);
+    google.maps.event.addListener(modalMap,'center_changed', function() {
+      $('#id_loc_latlong').val(modalMap.getCenter().lat() + ',' +  modalMap.getCenter().lng());
+      $('#manual_coordinates').val(modalMap.getCenter().lat() + ',' +  modalMap.getCenter().lng());
+    });
+    $('<div/>').addClass('centerMarker').appendTo(modalMap.getDiv())
+      
+      .click(function() {
+        var that = $(this);
+        if (!that.data('win')) {
+          that.data('win', new google.maps.InfoWindow({
+            content: 'this is the center'
+          }));
+          that.data('win').bindTo('position', modalMap, 'center');
+        }
+        that.data('win').open(modalMap);
+      });
+  }
+  function refreshMap(lat, lng, zoom){
+    var mapOptions = {
+      zoom: zoom,
+      center: new google.maps.LatLng(lat, lng)
+    };
+    modalMap.setOptions(mapOptions);
+  }
+
+  function displayAddress(lat, lng) {
+    $.get('https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=' + lat + '&lon=' + lng + '&zoom=18&addressdetails=1')
+          .done(function(response) {
+            if($('#id_latlng_display').length === 0){
+              var inputElem = $('<input class="form-control" id="id_latlng_display" readonly="true">');
+              $('#id_loc_latlong').before(inputElem);
+              $('#id_loc_latlong').hide();
+              inputElem.click(showLocationPopup);
+            }
+            $('#id_latlng_display').val(response.display_name);
+          })
+          .fail(function(err){
+            console.log(err);
+          });
+  }
+  function loadManualGps()
+   {
+    var str = $('#manual_coordinates').val();
+    var latLng = $('#manual_coordinates').val().split(',');
+    if(latLng.length === 2 && !isNaN(latLng[0]) && !isNaN(latLng[1])){
+      refreshMap(latLng[0].trim(), latLng[1].trim(), 14);
+      displayAddress(latLng[0].trim(), latLng[1].trim());
+      $('#id_loc_latlong').val(latLng);
+      $('#id_loc_latlong_accurate').val('5 Meters');
+    }
+    else{
+      alert('Invalid GPS location, enter only comma seperated decimal coordinates!\n\nEg: 10.5276,76.2144');
+    }
+    $('#inp_location_search').val('(Manually selected)');
+  }
+
+  function loadPlacePicker()
+  {
+    var inputElem = document.getElementById('inp_location_search');
+    var autocomplete = new google.maps.places.Autocomplete(inputElem);
+    autocomplete.setFields(['address_components', 'geometry', 'icon', 'name']);
+    autocomplete.addListener('place_changed', function() 
+    {
+      var place = autocomplete.getPlace();
+      var lat = place.geometry.location.lat();
+      var lon = place.geometry.location.lng();
+      refreshMap(lat, lon, 14);
+    });
+  }
+
+
+
+  </script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC3IMURaLxOpxxN-j_GhriEZ3SZjuy27FM&libraries=places"  async defer></script>
+
+{% endblock %}
+
+    
+

@@ -1,0 +1,96 @@
+{% extends 'portal/base/base.html' %}
+{% load bootstrap3 %}
+{% load static %}
+
+{% block breadcrumb %}
+
+<li class="breadcrumb-item active" aria-current="page">Profile</li>
+{% endblock %}
+
+{% block content %}
+<style>
+
+        .row-centered {
+        text-align:center;
+        }
+        td,th {
+          width: 25% ;
+        } 
+        table{
+          table-layout: fixed;
+        }
+</style>
+
+
+  <div class = "card">
+    <div class="card-header">
+        <i class="fa fa-align-justify"></i> Profile of  {{data.uid}} </br>
+    </div>
+    
+      <div class ="card-body">       
+              <div class="container table-responsive  " >
+                          <table class ="table table-striped justify-content-center border border-primary" >
+                              <thead >
+                                  <tr>
+                                      <th colspan="2" style="text-align:center; border-top: none; margin: 0px auto;  "><h5>{{data.uid}}</h5></th>
+                                  </tr>
+                              </thead>
+                              <tbody>
+                                      <tr>
+                                            <td><b> UserName  </b></td>
+                                            <td>{{data.uid.username}}</td>
+                                      </tr>
+                                      <tr>
+                                          <td><b> First Name  </b></td>
+                                          <td>{{data.uid.first_name}}</td>
+                                      </tr>
+                                      <tr>
+                                          <td><b> Last Name  </b></td>
+                                          <td>{{data.uid.last_name}}</td>
+                                      </tr>
+                                      <tr>
+                                            <td><b> Email  </b></td>
+                                            <td>{% if data.uid.email %} {{data.uid.email}} {%else%}  Not Avaiable  {%endif%}</td>
+                                    </tr>
+                                      <tr>
+                                          <td><b> Phone No  </b></td>
+                                          <td>{% if data.uid.phoneno %} {{data.uid.phoneno}} {%else%}  Not Avaiable  {%endif%}</td>
+                                      </tr>
+                                      <tr>
+                                          <td><b> Last Seen  </b></td>
+                                          <td>{{data.uid.last_login}}</td>
+                                      </tr>
+                                     
+                                      <tr>
+                                          <td><b> Account Created </b></td>
+                                          <td>{{data.uid.date_joined}}</td></tr>
+                                    
+                              
+                              
+                              
+                              
+                                  </tbody>
+  
+                          </table>
+  
+                      </div>
+  
+              </br>
+              <div class="row-centered">
+                    <form method ="POST">{% csrf_token %} 
+                            <input type="hidden" name="request_id" value="{{data.uid.id}}">
+                            
+                    <input  class="btn btn-primary " type ="submit" formaction="#" value ="Update" >
+                    
+            
+                
+            </div>
+              
+              </div>
+                
+          </div>
+{% endblock %}
+
+
+
+

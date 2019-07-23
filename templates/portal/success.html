@@ -1,0 +1,24 @@
+{% extends 'portal/base/base.html' %}
+{% load static %}
+
+{% block content %}
+{% if messages %}
+{% for message in messages %}
+<div class="alert alert-{{message.tags}}" role="alert">
+    {{ message }}
+</div>
+  
+{% endfor %}
+  
+{% endif %}
+
+
+{% if user.is_authenticated %}
+
+
+                {% else %}
+                    <p>Please <a href="/accounts/login">Login </a> to continue</p>
+                {% endif %}
+
+
+{% endblock %}

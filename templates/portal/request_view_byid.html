@@ -1,0 +1,93 @@
+{% extends 'portal/base/base.html' %}
+{% load bootstrap3 %}
+{% load static %}
+
+{% block breadcrumb %}
+
+<li class="breadcrumb-item active" aria-current="page">Request details</li>
+{% endblock %}
+
+{% block content %}
+<style>
+
+.row-centered {
+text-align:center;
+}
+td,th {
+  width: 25% ;
+} 
+table{
+  table-layout: fixed;
+}
+</style>
+<div class = "card">
+  <div class="card-header">
+      <i class="fa fa-align-justify"></i> Request Details  </br>
+  </div>
+  
+    <div class ="card-body">       
+            <div class="container table-responsive  " >
+                        <table class ="table table-striped justify-content-center border border-primary" >
+                            <thead >
+                                <tr>
+                                    <th colspan="2" style="text-align:center; border-top: none; margin: 0px auto;  "><h5>{{data}}</h5></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                    <tr>
+                                        <td><b> First Name  </b></td>
+                                        <td>{{data.first_name}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td><b> Last Name  </b></td>
+                                        <td>{{data.last_name}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td><b> Phone No  </b></td>
+                                        <td>{% if data.phoneno %} {{data.phoneno}} {%else%}  Not Avaiable  {%endif%}</td>
+                                    </tr>
+                                    <tr>
+                                        <td><b> Coordinates  </b></td>
+                                        <td><a href="https://www.google.com/maps/place/{{data.loc_latlong}}" target="_blank">{{data.loc_latlong}}</a></td>
+                                    </tr>
+                                    <tr>
+                                        <td><b> Description  </b></td>
+                                        <td>{{data.req_description}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td><b> Date and Time  </b></td>
+                                        <td>{{data.timestamp}}</td></tr>
+                                    <tr>
+                                        <td><b> status  </b></td>
+                                        <td>{{data.status}}</td>
+                                    </tr>
+                            
+                            
+                            
+                            
+                                </tbody>
+
+                        </table>
+
+                    </div>
+
+            </br>
+            <div class="row-centered">
+                    <form method ="POST">{% csrf_token %} 
+                            <input type="hidden" name="request_id" value="{{data.id}}">
+                            <a class="btn btn-secondary " href="{% url 'request_update_byid' data.id  %}">Update</a>
+                    <input  class="btn btn-danger " type ="submit" formaction="{% url 'request_delete_byid'  %}" value ="Delete" >
+                    
+            
+                
+            </div>
+            </div>
+              
+        </div>
+      
+
+{% endblock %}
+
+
+
+

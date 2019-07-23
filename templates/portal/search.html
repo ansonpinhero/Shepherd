@@ -1,0 +1,76 @@
+{% extends 'portal/base/base.html' %}
+{% load bootstrap3 %}
+{% load static %}
+
+{% block breadcrumb %}
+
+<li class="breadcrumb-item active" aria-current="page">Search</li>
+{% endblock %}
+
+{% block content %}
+{% if messages %}
+{% for message in messages %}
+<div class="alert alert-info" role="alert">
+    {{ message }}
+</div>
+  
+{% endfor %}
+  
+{% endif %}
+<div class="row">
+    <div class="col-md-4">
+        <form action="" method="get" class="simple-form">
+           
+      
+             
+                {% bootstrap_form filter.form bound_css_class=False %}
+            
+
+
+
+          <button type="submit" class="btn btn-success ">Search </button>
+      </form>
+    </div>
+    <div class="col-md-8">
+        <div class="table-responsive">
+            <table class="table">
+                <thead class="thead-dark">
+              <tr>
+                <th>Username</th>
+                <th>First Name </th>
+                <th>Last Name </th>
+                <th>User Type</th>
+                
+                <th>        </th>
+                
+              </thead> 
+              </tr>
+              {% for req in data %}
+                  <tr>
+                    <td>{{ req.username}}</td>
+                    <td>{{ req.first_name }}</td>
+                    <td>{{ req.last_name }}</td>
+                    <td>{{ req.user_type }}</td>
+                   
+                    <td><a class="btn btn btn-outline-secondary" href="{% url 'user_profile' user_name=req.username %}">More Actions </a></td>
+                    
+                    
+                  </tr>
+              {% endfor %}
+            </table>
+
+            
+
+          </div>
+
+      </div>
+</div>
+
+
+
+
+{% endblock %}
+
+
+
+

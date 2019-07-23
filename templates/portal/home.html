@@ -1,0 +1,13 @@
+{% extends 'portal/base/base.html' %}
+{% load static %}
+
+{% block content %}
+
+
+{% if user.is_authenticated %}
+                {% else %}
+                    <p>Please <a href="/accounts/login">Login </a> to continue</p>
+                {% endif %}
+
+
+{% endblock %}
