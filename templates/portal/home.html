@@ -7,6 +7,15 @@
 
 
 </style>
+{% if messages %}
+{% for message in messages %}
+<div class="alert alert-info" role="alert">
+    {{ message }}
+</div>
+  
+{% endfor %}
+  
+{% endif %}
 {% if user.is_authenticated %}
 {% if user.user_type == "l4" %}
     <marquee> <a href="{% url 'volunteer_invite' %}" >Click  here  to apply for becoming a volunteer</a></marquee> 

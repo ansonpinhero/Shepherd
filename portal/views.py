@@ -48,8 +48,8 @@ def SignUp(request):
         form = CustomUserCreationForm(request.POST)
         if form.is_valid():
             form.save()
-                
-            return redirect('dashboard')
+            messages.success(request, 'Account Created Successfully')     
+            return redirect('login')
     else:
         form = CustomUserCreationForm()
     return render(request, 'portal/signup.html', {'form': form})
