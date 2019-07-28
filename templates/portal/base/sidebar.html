@@ -26,7 +26,28 @@
                     </li>
 
                 {% ifequal user.user_type 'l0' %}
-                <a class="nav-link" href="{% url 'search_users' %}"><i class="icon-magnifier "></i> Search </a>
+               
+
+
+                <li class="nav-item nav-dropdown ">
+                        <a class="nav-link  nav-dropdown-toggle " href="#">
+                            <i class="icon-magnifier"></i> Search
+                        </a>
+                        <ul class="nav-dropdown-items">
+                        <li class="nav-item ">
+                        <a class="nav-link" href="{% url 'search_requests' %}">
+                        Requests
+                        </a>
+                        </li>
+                        <li class="nav-item ">
+                        <a class="nav-link" href="{% url 'search_users' %}">
+                        Users
+                        </a>
+                        </li>
+                        
+                        </ul>
+                        </li>
+
                 {%endifequal%}
                 {% else %}
                 <a class="nav-link" href="{% url 'index' %}"><i class="icon-home"></i> Home</a>

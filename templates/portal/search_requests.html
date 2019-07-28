@@ -1,0 +1,82 @@
+{% extends 'portal/base/base.html' %}
+{% load bootstrap3 %}
+{% load static %}
+
+{% block breadcrumb %}
+
+<li class="breadcrumb-item active" aria-current="page">Search</li>
+{% endblock %}
+
+{% block content %}
+
+</head>
+<body>
+ 
+        <form method="GET" class="form ">
+          <div class="form-group row" >
+          
+             
+                {% bootstrap_form filter.form  form_group_class='col-auto'  %}
+               
+
+          </div></br>
+          <div style="text-align:center;">
+              <button type="submit" class="btn btn-success ">Search </button>
+              <input type="reset" name ="reset" class="btn btn-info "/>
+            </div>
+          
+      </form>
+      {% if messages %}
+        {% for message in messages %}
+          <div class="alert alert-info" role="alert">
+                {{ message }}
+          </div>
+  
+        {% endfor %}
+  
+      {% endif %}
+     
+      {% if data %}
+        <div class="table-responsive">
+            <table class="table justify-content-center">
+                <thead class="thead-dark">
+              <tr>
+                
+                <th>First Name </th>
+                <th>Last Name </th>
+                
+                
+                <th>        </th>
+                
+              </thead> 
+              </tr>
+              {% for req in data %}
+                  <tr>
+                   
+                    <td>{{ req.first_name }}</td>
+                    <td>{{ req.last_name }}</td>
+                 
+                   
+                    <td><a class="btn btn btn-outline-secondary" href="{% url 'request_view_byid' req.id  %}">More Actions </a></td>
+                    
+                    
+                  </tr>
+              {% endfor %}
+            </table>
+
+            
+
+          </div>
+          {% else %}
+          {% endif %}
+    
+
+         
+
+
+
+{% endblock %}
+
+
+
+

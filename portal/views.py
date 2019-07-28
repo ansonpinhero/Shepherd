@@ -8,6 +8,10 @@ from django.contrib.auth import logout as log_out
 from django.urls import reverse
 from django.contrib import messages
 import django_filters
+from django import forms
+from datetime import datetime
+from django.contrib.admin.widgets import AdminDateWidget
+
 user_levels = {
     'l0':'SuperAdmin',
     'l2':'Manager ',
@@ -83,6 +87,7 @@ class UserFilter(django_filters.FilterSet):
             'username':['exact'],
             'email':['exact'],
             'user_type':['exact'],
+            
             
         }
 @login_required(login_url = 'login')  
@@ -197,3 +202,56 @@ def volunteer_invite(request):
         messages.success(request, 'Already Submitted a request ' )
     return render(request,'portal/blank.html')
    
+
+
+class RequestFilter(django_filters.FilterSet):
+    #fields = ['first_name', 'last_name','status','phoneno']
+    uid__username = django_filters.CharFilter(label='Username')
+    time_stamp = django_filters.DateFilter(field_name="timestamp", label="Date", lookup_expr='contains', widget=forms.DateInput(
+            attrs={
+                'id': 'datepicker',
+                'type': 'date'
+                
+            }
+        ))
+
+    class Meta:
+        model = Request
+        fields = {
+            'first_name' : ['contains'],
+            'last_name' : ['contains'],
+            'status':['exact'],
+            'phoneno':['exact'],
+           
+            
+            
+        }
+@login_required(login_url = 'login')  
+def RequestSearch(request):
+    if(request.user.user_type == 'l0') or (request.user.user_type == 'l2'):
+        filter = RequestFilter(request.GET, queryset=Request.objects.all())
+        print(filter)
+        people = filter.qs.order_by('first_name')
+        if len(people) ==0:
+            messages.warning(request, 'No results ')
+        else:
+            messages.success(request, 'You have {} results'.format(len(people)))
+             
+        return render(request, 'portal/search_requests.html', {'filter': filter , "data" : people })  
+    else:
+        return render(request,'portal/unauthorized.html')
+    
+@login_required(login_url = 'login')  
+def view_requests_by_user(request,user_name):
+    if((request.user.user_type == 'l0') or (request.user.username == user_name)):
+        req_data= Request.objects.select_related().filter(uid__username=str(user_name))
+        if len(req_data)==0:
+            messages.error(request, "{} has not submitted any requests".format(str(user_name)))
+            return render(request, 'portal/blank.html')
+        else:        
+            for i in req_data:
+                i.status= status_codes[str(i.status)]     
+            return render(request, 'portal/request_view.html', {'data': req_data})
+    else:
+        return render(request,'portal/unauthorized.html')
+        

@@ -32,7 +32,9 @@ urlpatterns = [
     path('request/update/<int:request_id>/',views.update_request,name='request_update_byid'),
     path('success/',views.success,name='success'),
     path('search/users/',views.Search,name='search_users'),
-    path('profile/<str:user_name>/',views.profile,name='user_profile'),
+    path('search/requests/',views.RequestSearch,name='search_requests'),
+    path('user/<str:user_name>/',views.profile,name='user_profile'),
+    path('user/<str:user_name>/requests/',views.view_requests_by_user,name='requests_by_user'),
     path('invite/volunteer',views.volunteer_invite,name='volunteer_invite')
      
     

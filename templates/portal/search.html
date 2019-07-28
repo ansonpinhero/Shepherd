@@ -8,32 +8,34 @@
 {% endblock %}
 
 {% block content %}
+<form method="GET" class="form ">
+    <div class="form-group row" >
+    
+       
+          {% bootstrap_form filter.form  form_group_class='col-auto'  %}
+         
+
+    </div></br>
+    <div style="text-align:center;">
+        <button type="submit" class="btn btn-success ">Search </button>
+        <input type="reset" name ="reset" class="btn btn-info "/>
+      </div>
+    
+</form>
 {% if messages %}
-{% for message in messages %}
-<div class="alert alert-info" role="alert">
-    {{ message }}
-</div>
-  
-{% endfor %}
-  
-{% endif %}
-<div class="row">
-    <div class="col-md-4">
-        <form action="" method="get" class="simple-form">
-           
-      
-             
-                {% bootstrap_form filter.form bound_css_class=False %}
-            
-
-
-
-          <button type="submit" class="btn btn-success ">Search </button>
-      </form>
+  {% for message in messages %}
+    <div class="alert alert-info" role="alert">
+          {{ message }}
     </div>
-    <div class="col-md-8">
+
+  {% endfor %}
+
+{% endif %}
+ 
+
+    {% if data %}
         <div class="table-responsive">
-            <table class="table">
+            <table class="table justify-content-center">
                 <thead class="thead-dark">
               <tr>
                 <th>Username</th>
@@ -41,7 +43,7 @@
                 <th>Last Name </th>
                 <th>User Type</th>
                 
-                <th>        </th>
+                <th colspan="2"><center>Actions</center></th>
                 
               </thead> 
               </tr>
@@ -52,7 +54,8 @@
                     <td>{{ req.last_name }}</td>
                     <td>{{ req.user_type }}</td>
                    
-                    <td><a class="btn btn btn-outline-secondary" href="{% url 'user_profile' user_name=req.username %}">More Actions </a></td>
+                    <td><a class="btn btn btn-outline-primary" href="{% url 'user_profile' user_name=req.username %}">More Actions </a></td>
+                    <td><a class="btn btn btn-outline-primary" href="{% url 'requests_by_user' user_name=req.username %}">Submitted Requests </a></td>
                     
                     
                   </tr>
@@ -62,10 +65,8 @@
             
 
           </div>
-
-      </div>
-</div>
-
+          {% else %}
+          {% endif %}
 
 
 
