@@ -11,7 +11,7 @@ import django_filters
 from django import forms
 from datetime import datetime
 from django.contrib.admin.widgets import AdminDateWidget
-
+from .filters import UserFilter , RequestFilter
 user_levels = {
     'l0':'SuperAdmin',
     'l2':'Manager ',
@@ -76,20 +76,7 @@ def req(request):
 def success(request):
     return render(request, 'portal/success.html',)
 
-class UserFilter(django_filters.FilterSet):
-    fields = ['first_name', 'last_name','username','user_type','email']
 
-    class Meta:
-        model = CustomUser
-        fields = {
-            'first_name' : ['contains'],
-            'last_name' : ['contains'],
-            'username':['exact'],
-            'email':['exact'],
-            'user_type':['exact'],
-            
-            
-        }
 @login_required(login_url = 'login')  
 def Search(request):
     if(request.user.user_type == 'l0') or (request.user.user_type == 'l2'):
@@ -204,28 +191,7 @@ def volunteer_invite(request):
    
 
 
-class RequestFilter(django_filters.FilterSet):
-    #fields = ['first_name', 'last_name','status','phoneno']
-    uid__username = django_filters.CharFilter(label='Username')
-    time_stamp = django_filters.DateFilter(field_name="timestamp", label="Date", lookup_expr='contains', widget=forms.DateInput(
-            attrs={
-                'id': 'datepicker',
-                'type': 'date'
-                
-            }
-        ))
 
-    class Meta:
-        model = Request
-        fields = {
-            'first_name' : ['contains'],
-            'last_name' : ['contains'],
-            'status':['exact'],
-            'phoneno':['exact'],
-           
-            
-            
-        }
 @login_required(login_url = 'login')  
 def RequestSearch(request):
     if(request.user.user_type == 'l0') or (request.user.user_type == 'l2'):
